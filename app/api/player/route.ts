@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import { getPlayerFromMemory, upsertPlayerInMemory } from '@/lib/inMemoryStore';
 import { PLAYER_COLLECTION, createDefaultPlayer } from '@/lib/player';
 import type { Player } from '@/lib/types';
 
@@ -7,6 +8,11 @@ export async function GET(request: NextRequest) {
   const playerId = request.nextUrl.searchParams.get('playerId');
   if (!playerId) {
     return NextResponse.json({ error: 'playerId is required' }, { status: 400 });
+  }
+
+  if (!process.env.MONGODB_URI) {
+    const player = getPlayerFromMemory(playerId);
+    return NextResponse.json({ player });
   }
 
   const db = await getDatabase();
@@ -28,6 +34,11 @@ export async function PUT(request: NextRequest) {
   const player: Player | undefined = body.player;
   if (!player || !player.id) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+  }
+
+  if (!process.env.MONGODB_URI) {
+    upsertPlayerInMemory(player);
+    return NextResponse.json({ status: 'ok' });
   }
 
   const db = await getDatabase();

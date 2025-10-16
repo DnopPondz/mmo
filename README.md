@@ -17,6 +17,9 @@ An upgraded idle RPG experience built with Next.js, styled with Tailwind CSS, an
    ```bash
    MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/idle-mmo?retryWrites=true&w=majority
    ```
+   > **Tip:** If you are just exploring the UI, you can skip this step. The API routes automatically fall back to an in-memory store
+   > when `MONGODB_URI` is not configured, so the game boots without any external services. Data will reset whenever the server
+   > restarts.
 4. Run the development server:
    ```bash
    bun dev

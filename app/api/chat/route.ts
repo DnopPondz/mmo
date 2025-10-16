@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import { addChatMessageToMemory, listChatFromMemory } from '@/lib/inMemoryStore';
 import { CHAT_COLLECTION, CHAT_LIMIT } from '@/lib/chat';
 import type { ChatMessage } from '@/lib/types';
 
 export async function GET() {
+  if (!process.env.MONGODB_URI) {
+    const messages = listChatFromMemory();
+    return NextResponse.json({ messages });
+  }
+
   const db = await getDatabase();
   const collection = db.collection<ChatMessage>(CHAT_COLLECTION);
   const messages = await collection
@@ -26,14 +32,20 @@ export async function POST(request: NextRequest) {
   }
 
   const trimmed = text.toString().slice(0, 240);
-  const db = await getDatabase();
-  const collection = db.collection<ChatMessage>(CHAT_COLLECTION);
   const message: ChatMessage = {
     playerId,
     playerName,
     text: trimmed,
     createdAt: new Date().toISOString()
   };
+
+  if (!process.env.MONGODB_URI) {
+    addChatMessageToMemory(message);
+    return NextResponse.json({ status: 'ok' });
+  }
+
+  const db = await getDatabase();
+  const collection = db.collection<ChatMessage>(CHAT_COLLECTION);
   await collection.insertOne(message);
 
   return NextResponse.json({ status: 'ok' });
