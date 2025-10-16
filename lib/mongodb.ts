@@ -1,4 +1,4 @@
-import type { Db, MongoClient } from 'mongodb';
+import { MongoClient, type Db } from 'mongodb';
 import { CHAT_COLLECTION, CHAT_LIMIT } from './chat';
 import { PLAYER_COLLECTION } from './player';
 
@@ -30,7 +30,6 @@ async function loadMongoClient() {
   if (!clientPromise) {
     clientPromise = (async () => {
       try {
-        const { MongoClient } = await import('mongodb');
         const client = new MongoClient(uri!);
         const connection = await client.connect();
         clientLoadError = null;
