@@ -16,7 +16,7 @@ An upgraded idle RPG experience built with Next.js, styled with Tailwind CSS, an
 3. Provide your MongoDB connection string in an `.env.local` file:
    ```bash
    MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/idle-mmo?retryWrites=true&w=majority
-   # Optional: override the database name used by the API routes.
+   # Optional: override the database name used by the API routes (defaults to "idle-mmo").
    MONGODB_DB=idle-mmo
    ```
    > **Tip:** If you are just exploring the UI, you can skip this step. The API routes automatically fall back to an in-memory store

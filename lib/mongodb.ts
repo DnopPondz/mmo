@@ -3,7 +3,7 @@ import { CHAT_COLLECTION, CHAT_LIMIT } from './chat';
 import { PLAYER_COLLECTION } from './player';
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB;
+const dbName = process.env.MONGODB_DB ?? 'idle-mmo';
 
 if (!uri) {
   console.warn('MONGODB_URI is not set. API routes will fall back to the in-memory store.');

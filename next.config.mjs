@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    instrumentationHook: false
+    instrumentationHook: false,
+    serverComponentsExternalPackages: ['mongodb']
   },
   eslint: {
     dirs: ['app', 'components', 'lib', 'hooks']
