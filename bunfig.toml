@@ -1,0 +1,5 @@
+[install]
+# Ensure Bun installs peer dependencies used by Next.js automatically
+optional = true
+
+disable-lockfile = false
