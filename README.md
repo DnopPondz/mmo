@@ -74,8 +74,9 @@ lib/
 ### MongoDB troubleshooting
 
 If you encounter runtime errors similar to `Cannot find module './operations/search_indexes/update'` while the API is starting up,
-the local MongoDB driver installation is corrupted. The game will continue to run against the in-memory store, but you can restore
-the MongoDB connection with the following steps:
+the local MongoDB driver installation is corrupted. The project intentionally pins the driver to the 5.x line because Bun's bundler
+does not parse the 6.x search index helpers yet, which surfaces as `error: Unexpected` in development. The game will continue to run
+against the in-memory store, but you can restore the MongoDB connection with the following steps:
 
 1. Delete your existing installation artifacts:
    ```bash
