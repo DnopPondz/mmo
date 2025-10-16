@@ -16,16 +16,23 @@ An upgraded idle RPG experience built with Next.js, styled with Tailwind CSS, an
 3. Provide your MongoDB connection string in an `.env.local` file:
    ```bash
    MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/idle-mmo?retryWrites=true&w=majority
+   # Optional: override the database name used by the API routes.
+   MONGODB_DB=idle-mmo
    ```
    > **Tip:** If you are just exploring the UI, you can skip this step. The API routes automatically fall back to an in-memory store
    > when `MONGODB_URI` is not configured or the MongoDB driver fails to load, so the game boots without any external services.
    > Data will reset whenever the server restarts.
-4. Run the development server:
+4. (Optional) Seed your MongoDB database with a demo player and welcome message:
+   ```bash
+   bun run seed:mongo
+   ```
+   This command ensures the required collections exist and inserts sample data so the UI has something to render immediately.
+5. Run the development server:
    ```bash
    bun dev
    ```
    This starts Next.js on [http://localhost:3000](http://localhost:3000).
-5. Build for production or run the Next.js server locally:
+6. Build for production or run the Next.js server locally:
    ```bash
    bun run build
    bun start
@@ -75,7 +82,11 @@ the MongoDB connection with the following steps:
    rm -rf node_modules package-lock.json bun.lockb
    ```
 2. Reinstall dependencies. If you are using Bun, run `bun install`. For npm users run `npm install` instead.
-3. Restart the development server (`bun run dev`).
+3. Run the database seeder once the driver installs to recreate the collections:
+   ```bash
+   bun run seed:mongo
+   ```
+4. Restart the development server (`bun run dev`).
 
 The API will resume using MongoDB once the driver loads correctly. Until then it silently falls back to the in-memory data, so you
 can continue developing without interruption.
