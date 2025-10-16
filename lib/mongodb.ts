@@ -1,34 +1,55 @@
-import { MongoClient } from 'mongodb';
+import type { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
+
 if (!uri) {
-  console.warn('MONGODB_URI is not set. API routes depending on MongoDB will fail.');
+  console.warn('MONGODB_URI is not set. API routes will fall back to the in-memory store.');
 }
 
-declare global {
-  // eslint-disable-next-line no-var
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
+let clientPromise: Promise<MongoClient> | null = null;
+let clientLoadError: Error | null = null;
+
+export function isMongoConfigured() {
+  return Boolean(uri);
 }
 
-const options = {};
-
-let clientPromise: Promise<MongoClient> | undefined;
-
-if (!global._mongoClientPromise && uri) {
-  const client = new MongoClient(uri, options);
-  global._mongoClientPromise = client.connect();
-}
-
-clientPromise = global._mongoClientPromise;
-
-export async function getMongoClient() {
-  if (!clientPromise) {
+async function loadMongoClient() {
+  if (!isMongoConfigured()) {
     throw new Error('MongoDB client not initialised. Ensure MONGODB_URI is configured.');
   }
+
+  if (clientLoadError) {
+    throw clientLoadError;
+  }
+
+  if (!clientPromise) {
+    clientPromise = (async () => {
+      try {
+        const { MongoClient } = await import('mongodb');
+        const client = new MongoClient(uri!);
+        const connection = await client.connect();
+        clientLoadError = null;
+        return connection;
+      } catch (error) {
+        clientLoadError = error instanceof Error ? error : new Error(String(error));
+        clientPromise = null;
+        throw clientLoadError;
+      }
+    })();
+  }
+
   return clientPromise;
 }
 
+export async function getMongoClient() {
+  return loadMongoClient();
+}
+
 export async function getDatabase() {
-  const client = await getMongoClient();
+  const client = await loadMongoClient();
   return client.db();
+}
+
+export function getMongoLoadError() {
+  return clientLoadError;
 }

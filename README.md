@@ -18,8 +18,8 @@ An upgraded idle RPG experience built with Next.js, styled with Tailwind CSS, an
    MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/idle-mmo?retryWrites=true&w=majority
    ```
    > **Tip:** If you are just exploring the UI, you can skip this step. The API routes automatically fall back to an in-memory store
-   > when `MONGODB_URI` is not configured, so the game boots without any external services. Data will reset whenever the server
-   > restarts.
+   > when `MONGODB_URI` is not configured or the MongoDB driver fails to load, so the game boots without any external services.
+   > Data will reset whenever the server restarts.
 4. Run the development server:
    ```bash
    bun dev
@@ -63,5 +63,21 @@ lib/
   mongodb.ts     → MongoDB connection helper with caching
   types.ts       → Shared TypeScript types
 ```
+
+### MongoDB troubleshooting
+
+If you encounter runtime errors similar to `Cannot find module './operations/search_indexes/update'` while the API is starting up,
+the local MongoDB driver installation is corrupted. The game will continue to run against the in-memory store, but you can restore
+the MongoDB connection with the following steps:
+
+1. Delete your existing installation artifacts:
+   ```bash
+   rm -rf node_modules package-lock.json bun.lockb
+   ```
+2. Reinstall dependencies. If you are using Bun, run `bun install`. For npm users run `npm install` instead.
+3. Restart the development server (`bun run dev`).
+
+The API will resume using MongoDB once the driver loads correctly. Until then it silently falls back to the in-memory data, so you
+can continue developing without interruption.
 
 Enjoy the adventure!
