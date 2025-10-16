@@ -4,19 +4,25 @@ An upgraded idle RPG experience built with Next.js, styled with Tailwind CSS, an
 
 ## Getting started
 
-1. Install dependencies with [Bun](https://bun.sh/):
+1. Install Bun if you have not already. The easiest way is via the official installer:
+   ```bash
+   curl -fsSL https://bun.sh/install | bash
+   ```
+   Restart your shell so that the `bun` command is available.
+2. Install project dependencies with [Bun](https://bun.sh/):
    ```bash
    bun install
    ```
-2. Provide your MongoDB connection string in an `.env.local` file:
+3. Provide your MongoDB connection string in an `.env.local` file:
    ```bash
    MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/idle-mmo?retryWrites=true&w=majority
    ```
-3. Run the development server:
+4. Run the development server:
    ```bash
    bun dev
    ```
-4. Build for production or run the Next.js server locally:
+   This starts Next.js on [http://localhost:3000](http://localhost:3000).
+5. Build for production or run the Next.js server locally:
    ```bash
    bun run build
    bun start
