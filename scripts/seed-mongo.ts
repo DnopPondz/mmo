@@ -33,20 +33,9 @@ await db.collection(PLAYER_COLLECTION).updateOne(
   { upsert: true }
 );
 
-await db.collection(CHAT_COLLECTION).updateOne(
-  { _id: 'seed-welcome-message' },
-  {
-    $set: {
-      playerId: demoPlayerId,
-      playerName: demoPlayer.name,
-      text: 'Welcome to the Idle MMO! Your MongoDB connection is ready to go.',
-      createdAt: now
-    }
-  },
-  { upsert: true }
-);
+await db.collection(CHAT_COLLECTION).deleteOne({ _id: 'seed-welcome-message' });
 
-console.log(`Seeded MongoDB database "${getDatabaseName() ?? '(default)'}" with a demo player and chat message.`);
+console.log(`Seeded MongoDB database "${getDatabaseName() ?? '(default)'}" with a demo player.`);
 console.log('You can now start the development server with `bun dev`.');
 
 process.exit(0);

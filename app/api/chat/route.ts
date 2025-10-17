@@ -10,7 +10,7 @@ export async function GET() {
       const db = await getDatabase();
       const collection = db.collection<ChatMessage>(CHAT_COLLECTION);
       const messages = await collection
-        .find({}, { projection: { _id: 0 } })
+        .find({ _id: { $ne: 'seed-welcome-message' } }, { projection: { _id: 0 } })
         .sort({ createdAt: -1 })
         .limit(CHAT_LIMIT)
         .toArray();

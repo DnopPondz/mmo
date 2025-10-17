@@ -72,10 +72,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="mt-6 text-right text-xs text-slate-500">
-        {isSaving ? 'กำลังบันทึกความก้าวหน้า...' : 'ความก้าวหน้าถูกบันทึกไว้ใน MongoDB แล้ว'}
-      </div>
-
       <GameFooter />
     </main>
   );

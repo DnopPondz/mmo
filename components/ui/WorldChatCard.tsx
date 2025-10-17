@@ -11,10 +11,12 @@ interface WorldChatCardProps {
 
 export function WorldChatCard({ messages, onSend, currentPlayerId }: WorldChatCardProps) {
   const [text, setText] = useState('');
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const container = listRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
   }, [messages]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -30,7 +32,7 @@ export function WorldChatCard({ messages, onSend, currentPlayerId }: WorldChatCa
         <h3 className="font-display text-xl text-purple-200">World Chat</h3>
         <span className="text-xs uppercase tracking-[0.4em] text-slate-500">Global</span>
       </header>
-      <div className="flex-1 space-y-2 overflow-y-auto pr-2 text-sm">
+      <div ref={listRef} className="flex-1 space-y-2 overflow-y-auto pr-2 text-sm">
         {messages.map((message) => (
           <div
             key={message.createdAt + message.playerId}
@@ -43,7 +45,6 @@ export function WorldChatCard({ messages, onSend, currentPlayerId }: WorldChatCa
             <p>{message.text}</p>
           </div>
         ))}
-        <div ref={bottomRef} />
       </div>
       <form onSubmit={handleSubmit} className="mt-3">
         <input
